@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  JITPACK_KEY: ${{ secrets.JITPACK_TOKEN }}
+  JITPACK_KEY: jp_dqtrkmtqr9nnifa30s4ffn5epp
 
 jobs:
   build:
