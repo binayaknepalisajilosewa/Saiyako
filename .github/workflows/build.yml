@@ -27,9 +27,6 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build Debug APK
-        env:
-          JITPACK_KEY: ${{ secrets.JITPACK_KEY }}
-          JITPACK_USERNAME: ${{ secrets.JITPACK_USERNAME }}
         run: |
           ./gradlew assembleFdroidDebug --no-daemon --stacktrace -Dorg.gradle.configuration-cache=false
 
