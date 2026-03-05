@@ -1,0 +1,139 @@
+package ani.saiyako.settings
+
+import android.content.Intent
+import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.updateLayoutParams
+import androidx.recyclerview.widget.LinearLayoutManager
+import ani.saiyako.BuildConfig
+import ani.saiyako.R
+import ani.saiyako.databinding.ActivitySettingsAboutBinding
+import ani.saiyako.initActivity
+import ani.saiyako.navBarHeight
+import ani.saiyako.others.CustomBottomDialog
+import ani.saiyako.restartApp
+import ani.saiyako.settings.saving.PrefManager
+import ani.saiyako.settings.saving.PrefName
+import ani.saiyako.statusBarHeight
+import ani.saiyako.themes.ThemeManager
+import ani.saiyako.util.Logger
+
+class SettingsAboutActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySettingsAboutBinding
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        ThemeManager(this).applyTheme()
+        initActivity(this)
+        val context = this
+
+        binding = ActivitySettingsAboutBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.apply {
+            settingsAboutLayout.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                topMargin = statusBarHeight
+                bottomMargin = navBarHeight
+            }
+            aboutSettingsBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
+
+            settingsRecyclerView.adapter = SettingsAdapter(
+                arrayListOf(
+                    Settings(
+                        type = 1,
+                        name = getString(R.string.faq),
+                        desc = getString(R.string.faq_desc),
+                        icon = R.drawable.ic_round_help_24,
+                        onClick = {
+                            startActivity(Intent(context, FAQActivity::class.java))
+                        },
+                        isActivity = true
+                    ),
+                    Settings(
+                        type = 2,
+                        name = getString(R.string.check_app_updates),
+                        desc = getString(R.string.check_app_updates_desc),
+                        icon = R.drawable.ic_round_new_releases_24,
+                        isChecked = PrefManager.getVal(PrefName.CheckUpdate),
+                        switch = { isChecked, _ ->
+                            PrefManager.setVal(PrefName.CheckUpdate, isChecked)
+                        },
+                        isVisible = !BuildConfig.FLAVOR.contains("fdroid")
+                    ),
+                    Settings(
+                        type = 2,
+                        name = getString(R.string.share_username_in_crash_reports),
+                        desc = getString(R.string.share_username_in_crash_reports_desc),
+                        icon = R.drawable.ic_round_search_24,
+                        isChecked = PrefManager.getVal(PrefName.SharedUserID),
+                        switch = { isChecked, _ ->
+                            PrefManager.setVal(PrefName.SharedUserID, isChecked)
+                        },
+                        isVisible = !BuildConfig.FLAVOR.contains("fdroid")
+                    ),
+                    Settings(
+                        type = 2,
+                        name = getString(R.string.log_to_file),
+                        desc = getString(R.string.logging_warning),
+                        icon = R.drawable.ic_round_edit_note_24,
+                        isChecked = PrefManager.getVal(PrefName.LogToFile),
+                        switch = { isChecked, _ ->
+                            PrefManager.setVal(PrefName.LogToFile, isChecked)
+                            Logger.clearLog()
+                            restartApp()
+                        },
+                        attachToSwitch = {
+                            it.settingsExtraIcon.visibility = View.VISIBLE
+                            it.settingsExtraIcon.setImageResource(R.drawable.ic_round_share_24)
+                            it.settingsExtraIcon.setOnClickListener {
+                                Logger.shareLog(context)
+                            }
+
+                        }
+                    ),
+                    Settings(
+                        type = 1,
+                        name = getString(R.string.devs),
+                        desc = getString(R.string.devs_desc),
+                        icon = R.drawable.ic_round_accessible_forward_24,
+                        onClick = {
+                            DevelopersDialogFragment().show(supportFragmentManager, "dialog")
+                        }
+                    ),
+                    Settings(
+                        type = 1,
+                        name = getString(R.string.forks),
+                        desc = getString(R.string.forks_desc),
+                        icon = R.drawable.ic_round_restaurant_24,
+                        onClick = {
+                            ForksDialogFragment().show(supportFragmentManager, "dialog")
+                        }
+                    ),
+                    Settings(
+                        type = 1,
+                        name = getString(R.string.disclaimer),
+                        desc = getString(R.string.disclaimer_desc),
+                        icon = R.drawable.ic_round_info_24,
+                        onClick = {
+                            val text = TextView(context)
+                            text.setText(R.string.full_disclaimer)
+
+                            CustomBottomDialog.newInstance().apply {
+                                setTitleText(context.getString(R.string.disclaimer))
+                                addView(text)
+                                setNegativeButton(context.getString(R.string.close)) {
+                                    dismiss()
+                                }
+                                show(supportFragmentManager, "dialog")
+                            }
+                        }
+                    ),
+                )
+            )
+            binding.settingsRecyclerView.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        }
+    }
+}
