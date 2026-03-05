@@ -7,9 +7,6 @@ on:
     branches: [ "main", "master" ]
   workflow_dispatch:
 
-env:
-  JITPACK_KEY: jp_dqtrkmtqr9nnifa30s4ffn5epp
-
 jobs:
   build:
     name: Build Debug APK
@@ -30,7 +27,11 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build Debug APK
-        run: ./gradlew assembleFdroidDebug --no-daemon --stacktrace -Dorg.gradle.configuration-cache=false
+        env:
+          JITPACK_KEY: jp_dqtrkmtqr9nnifa30s4ffn5epp
+          JITPACK_USERNAME: ${{ github.actor }}
+        run: |
+          ./gradlew assembleFdroidDebug --no-daemon --stacktrace -Dorg.gradle.configuration-cache=false
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
