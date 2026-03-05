@@ -124,14 +124,15 @@ dependencies {
 
 //  UI
     implementation 'com.google.android.material:material:1.12.0'
-    implementation 'com.github.ARAndroid:AnimatedBottomBar:1.1.0'
+    // Replaced JitPack dependency with Material Components
     implementation 'com.flaviofaria:kenburnsview:1.0.7'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
     implementation 'com.alexvasilkov:gesture-views:2.8.3'
     implementation 'com.github.VipulOG:ebook-reader:0.1.6'
     implementation 'androidx.paging:paging-runtime-ktx:3.2.1'
-    implementation 'com.github.eltos:simpledialogfragment:2.0.3'
-    implementation 'com.github.AAChartModel:AAChartCore-Kotlin:v8.0.0'
+    // implementation 'com.github.eltos:simpledialogfragment:2.0.3' // Removed - use AndroidX DialogFragment instead
+    // implementation 'com.github.AAChartModel:AAChartCore-Kotlin:v8.0.0' // Removed
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
 //  Markwon
     ext.markwon_version = '4.6.2'
@@ -157,8 +158,8 @@ dependencies {
     implementation 'ru.beryukhov:flowreactivenetwork:1.0.4'
     implementation 'ca.gosyer:voyager-navigator:1.0.0-rc07'
     implementation 'com.squareup.logcat:logcat:0.1'
-    implementation 'com.github.inorichi.injekt:injekt-core:v1.0.6'
-    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.12'
+    // Using Koin instead of Injekt (Koin is on Maven Central)
+    implementation 'io.insert-koin:koin-android:3.5.0'
     implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.12'
     implementation 'com.squareup.okhttp3:okhttp-dnsoverhttps'
     implementation 'com.squareup.okio:okio:3.8.0'
