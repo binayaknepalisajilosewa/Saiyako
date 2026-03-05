@@ -28,8 +28,8 @@ jobs:
 
       - name: Build Debug APK
         env:
-          JITPACK_KEY: jp_dqtrkmtqr9nnifa30s4ffn5epp
-          JITPACK_USERNAME: ${{ github.actor }}
+          JITPACK_KEY: ${{ secrets.JITPACK_KEY }}
+          JITPACK_USERNAME: ${{ secrets.JITPACK_USERNAME }}
         run: |
           ./gradlew assembleFdroidDebug --no-daemon --stacktrace -Dorg.gradle.configuration-cache=false
 
